@@ -30,7 +30,30 @@ enum RTCEnum {
 }
 
 //% color="#31C7D5" weight=10 icon="\uf192"
-namespace DS3231 {
+namespace PetFeeder {
+    /**
+     * Check if the current time is as the specified time (hh)
+     * @param Check if the current time is as the specified time (hh)
+     * 
+     */
+    //% blockId=turnonmotor block="Turn on motor (Connected to %pin1| and %pin2)"
+    //% weight=87
+    export function TurnOnMotor(pin1: DigitalPin, pin2: DigitalPin) {
+
+    }
+
+    /**
+     * Check if the current time is as the specified time (hh)
+     * @param Check if the current time is as the specified time (hh)
+     * 
+     */
+    //% blockId=turnoffmotor block="Turn off motor (Connected to %pin1| and %pin2)"
+    //% weight=87
+    export function TurnOffMotor(pin1: DigitalPin, pin2: DigitalPin) {
+
+    }
+
+
     /**
      * Get the current time / date
      * @param Get the day / month / hour / minute / second 
@@ -118,6 +141,9 @@ namespace DS3231 {
 
         return value
     }
+
+
+
     /**
      * Set the current time / date
      * @param Set the day / month / hour / minute / second 
@@ -159,40 +185,7 @@ namespace DS3231 {
         pins.i2cWriteBuffer(104, setbuf, false)
     }
 
-    /**
-     * Get the current time (in string)
-     * @param Get the day / month / hour / minute / second 
-     * 
-     */
-    //% blockId=getcurrtime block="Get current time in text"
-    //% weight=87
-    export function GetTime(): string {
-
-        let value = pad(DS3231.GetDayTime(RTCEnum.Hour).toString(), 2)
-        value += ":"
-        value += pad(DS3231.GetDayTime(RTCEnum.Minute).toString(), 2)
-        value += ":"
-        value += pad(DS3231.GetDayTime(RTCEnum.Second).toString(), 2)
-        return value
-    }
-
-    /**
-     * Get the current date in string
-     * @param Get the day / month / hour / minute / second 
-     * 
-     */
-    //% blockId=getcurrdate block="Get current date in text"
-    //% weight=87
-    export function GetDate(): string {
-
-        let value = pad(DS3231.GetDayTime(RTCEnum.Day).toString(), 2)
-        value += "/"
-        value += pad(DS3231.GetDayTime(RTCEnum.Month).toString(), 2)
-        value += "/"
-        value += pad(DS3231.GetDayTime(RTCEnum.Year).toString(), 2)
-        return value
-    }
-
+  
     /**
      * Check if the current time is as the specified time (hh:mm)
      * @param Check if the current time is as the specified time (hh:mm)
@@ -201,8 +194,8 @@ namespace DS3231 {
     //% blockId=checkhhmm block="Is now H: %hh|,M:%mm|,S:00?"
     //% weight=87
     export function CheckTimeHHMM(hh: number, mm: number): boolean {
-        if (DS3231.GetDayTime(RTCEnum.Second) == 0) {
-            if ((DS3231.GetDayTime(RTCEnum.Hour) == hh) && (DS3231.GetDayTime(RTCEnum.Minute) == mm)) {
+        if (PetFeeder.GetDayTime(RTCEnum.Second) == 0) {
+            if ((PetFeeder.GetDayTime(RTCEnum.Hour) == hh) && (PetFeeder.GetDayTime(RTCEnum.Minute) == mm)) {
                 return true
             }
             else {
@@ -222,8 +215,8 @@ namespace DS3231 {
     //% blockId=checkmm block="Is now M:%mm|,S:00?"
     //% weight=87
     export function CheckTimeMM(mm: number): boolean {
-        if (DS3231.GetDayTime(RTCEnum.Second) == 0) {
-            if (DS3231.GetDayTime(RTCEnum.Minute) == mm) {
+        if (PetFeeder.GetDayTime(RTCEnum.Second) == 0) {
+            if (PetFeeder.GetDayTime(RTCEnum.Minute) == mm) {
                 return true
             }
             else {
@@ -244,8 +237,8 @@ namespace DS3231 {
     //% blockId=checkhh block="Is now H:%hh|,M:00, S:00?"
     //% weight=87
     export function CheckTimeHH(hh: number): boolean {
-        if ((DS3231.GetDayTime(RTCEnum.Minute) == 0) && (DS3231.GetDayTime(RTCEnum.Second) == 0)) {
-            if (DS3231.GetDayTime(RTCEnum.Hour) == hh) {
+        if ((PetFeeder.GetDayTime(RTCEnum.Minute) == 0) && (PetFeeder.GetDayTime(RTCEnum.Second) == 0)) {
+            if (PetFeeder.GetDayTime(RTCEnum.Hour) == hh) {
                 return true
             }
             else {
@@ -258,6 +251,39 @@ namespace DS3231 {
     }
 
 
+    /**
+       * Get the current time (in string)
+       * @param Get the day / month / hour / minute / second 
+       * 
+       */
+    //% blockId=getcurrtime block="Get current time in text"
+    //% weight=87
+    export function GetTime(): string {
+
+        let value = pad(PetFeeder.GetDayTime(RTCEnum.Hour).toString(), 2)
+        value += ":"
+        value += pad(PetFeeder.GetDayTime(RTCEnum.Minute).toString(), 2)
+        value += ":"
+        value += pad(PetFeeder.GetDayTime(RTCEnum.Second).toString(), 2)
+        return value
+    }
+
+    /**
+     * Get the current date in string
+     * @param Get the day / month / hour / minute / second 
+     * 
+     */
+    //% blockId=getcurrdate block="Get current date in text"
+    //% weight=87
+    export function GetDate(): string {
+
+        let value = pad(PetFeeder.GetDayTime(RTCEnum.Day).toString(), 2)
+        value += "/"
+        value += pad(PetFeeder.GetDayTime(RTCEnum.Month).toString(), 2)
+        value += "/"
+        value += pad(PetFeeder.GetDayTime(RTCEnum.Year).toString(), 2)
+        return value
+    }
 
 
     function decToBCD(dec: number): number {
@@ -271,4 +297,4 @@ namespace DS3231 {
 
     }
 
-} 
+}
