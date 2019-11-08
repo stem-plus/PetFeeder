@@ -54,6 +54,20 @@ namespace PetFeeder {
     }
 
 
+
+    /**
+     * Check if the current time is as the specified time (hh)
+     * @param Check if the current time is as the specified time (hh)
+     * 
+     */
+    //% blockId=ObjDec block="Is there an object? (Trig: %pin1|, Echo: %pin2|) (Distance: %dist|)"
+    //% weight=87
+    export function ObjDetect(pin1: DigitalPin, pin2: DigitalPin, dist:number) : boolean {
+        return true
+
+    }
+
+
     /**
      * Get the current time / date
      * @param Get the day / month / hour / minute / second 
@@ -185,7 +199,7 @@ namespace PetFeeder {
         pins.i2cWriteBuffer(104, setbuf, false)
     }
 
-  
+
     /**
      * Check if the current time is as the specified time (hh:mm)
      * @param Check if the current time is as the specified time (hh:mm)
