@@ -1,9 +1,9 @@
 /*
-Copyright 2018 Jack Ho, Parco Choi, Yu Sang Lo
+Copyright 2020 Jack Ho
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. */
-
+let distdetect = 0
 let ss = 0
 let mm = 0
 let hh = 0
@@ -13,6 +13,15 @@ let yyyy = 0
 let buf = pins.createBuffer(7)
 let setbuf = pins.createBuffer(2)
 let value = 0
+
+enum PngUnit {
+    //% block="μs"
+    MicroSeconds,
+    //% block="cm"
+    Centimeters,
+    //% block="inches"
+    Inches
+}
 
 enum RTCEnum {
     //% block="Second"
@@ -39,7 +48,8 @@ namespace PetFeeder {
     //% blockId=turnonmotor block="Turn on motor (Connected to %pin1| and %pin2)"
     //% weight=87
     export function TurnOnMotor(pin1: DigitalPin, pin2: DigitalPin) {
-
+        pins.digitalWritePin(pin1, 1)
+        pins.digitalWritePin(pin2, 0)
     }
 
     /**
@@ -50,7 +60,8 @@ namespace PetFeeder {
     //% blockId=turnoffmotor block="Turn off motor (Connected to %pin1| and %pin2)"
     //% weight=87
     export function TurnOffMotor(pin1: DigitalPin, pin2: DigitalPin) {
-
+        pins.digitalWritePin(pin1, 0)
+        pins.digitalWritePin(pin2, 0)
     }
 
 
@@ -62,8 +73,17 @@ namespace PetFeeder {
      */
     //% blockId=ObjDec block="Is there an object? (Trig: %pin1|, Echo: %pin2|) (Distance: %dist|)"
     //% weight=87
-    export function ObjDetect(pin1: DigitalPin, pin2: DigitalPin, dist:number) : boolean {
-        return true
+    export function ObjDetect(pin1: DigitalPin, pin2: DigitalPin, dist: number): boolean {
+        distdetect = ping(
+            pin1,
+            pin2,
+            PngUnit.Centimeters
+        )
+        if (distdetect > 0 && distdetect <= dist) {
+            return true
+        } else {
+            return false
+        }
 
     }
 
@@ -309,6 +329,25 @@ namespace PetFeeder {
     function pad(str: string, max: number): string {
         return str.length < max ? pad("0" + str, max) : str;
 
+    }
+
+    function ping(trig: DigitalPin, echo: DigitalPin, unit: PngUnit, maxCmDistance = 500): number {
+        // send pulse
+        pins.setPull(trig, PinPullMode.PullNone);
+        pins.digitalWritePin(trig, 0);
+        control.waitMicros(2);
+        pins.digitalWritePin(trig, 1);
+        control.waitMicros(10);
+        pins.digitalWritePin(trig, 0);
+
+        // read pulse
+        const d = pins.pulseIn(echo, PulseValue.High, maxCmDistance * 58);
+
+        switch (unit) {
+            case PngUnit.Centimeters: return Math.idiv(d, 58);
+            case PngUnit.Inches: return Math.idiv(d, 148);
+            default: return d;
+        }
     }
 
 }
