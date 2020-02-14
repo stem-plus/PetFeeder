@@ -1,4 +1,4 @@
-# DS3231
+# PetFeeder
 Package for PetFeeder activity
 ## Basic usage
 Package for PetFeeder activity
