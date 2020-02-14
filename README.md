@@ -1,7 +1,7 @@
 # DS3231
-Package for DS3231 real-time clock module developed by Jack Ho, Parco Choi, Yu Sang Lo and Judy Chan
+Package for PetFeeder activity
 ## Basic usage
-Use the blocks to set or get current time or date.
+Package for PetFeeder activity
 
 ## License
 
